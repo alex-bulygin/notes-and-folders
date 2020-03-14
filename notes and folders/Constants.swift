@@ -11,6 +11,8 @@ struct K {
     struct Icons {
         static let folder = "folder"
         static let note = "doc.text"
+        static let trash = "trash"
+        static let edit = "pencil"
     }
     
     struct ItemTypes {

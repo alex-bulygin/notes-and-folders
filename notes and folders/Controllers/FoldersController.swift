@@ -30,23 +30,27 @@ class FoldersController: UIViewController {
         tableView.delegate = self
         
         navBackButton.isEnabled = false
-        
-//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        setupRootFolder()
-        
-        loadItems(in: currentFolder)
 
-        
-//
+        setupRootFolder()
+        loadItems(in: currentFolder)
+        refreshTableView()
+
 //        loadItems()
 //        deleteAll()
 //        loadItems()
-        
-        refreshTableView()
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
     }
     
-    func refreshTableView() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadItems(in: currentFolder)
+        refreshTableView()
+
+    }
+    
+    func sortFoldersAndNotes() {
         folders.sort {
             $0.name! < $1.name!
         }
@@ -55,6 +59,12 @@ class FoldersController: UIViewController {
             $0.modified! > $1.modified!
         }
         
+    }
+    
+    func refreshTableView() {
+        
+        sortFoldersAndNotes()
+
         DispatchQueue.main.async {
             
             if let folder = self.currentFolder {
@@ -71,8 +81,6 @@ class FoldersController: UIViewController {
         }
     }
     
-    //MARK: - Core Data
-    
     func setupRootFolder() {
         
         loadItems()
@@ -86,9 +94,12 @@ class FoldersController: UIViewController {
         
         currentFolder = Folder(context: context)
         currentFolder!.name = K.rootFolderName
+        currentFolder!.id = UUID().uuidString
         saveContext()
         
     }
+    
+    //MARK: - Core Data
     
     func saveContext() {
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
@@ -102,13 +113,10 @@ class FoldersController: UIViewController {
         let predicate: NSPredicate
         
         if let parentFolder = folder {
-             predicate = NSPredicate(format: "parentFolder.name CONTAINS %@", parentFolder.name!)
+            predicate = NSPredicate(format: "parentFolder.id CONTAINS %@", parentFolder.id!)
             folders_request.predicate = predicate
             notes_request.predicate = predicate
         }
-//        else {
-//            predicate = NSPredicate(format: "parentFolder.name MATCHES nil")
-//        }
                 
         do {
             folders = try context.fetch(folders_request)
@@ -133,8 +141,6 @@ class FoldersController: UIViewController {
         
         saveContext()
     }
-    
-    //MARK: - Actions
     
     func addItem(ofType itemType: String) {
         
@@ -164,6 +170,7 @@ class FoldersController: UIViewController {
                     if let parentFolder = self.currentFolder {
                         newFolder.parentFolder = parentFolder
                     }
+                    newFolder.id = UUID().uuidString
                     self.folders.append(newFolder)
                     
                 } else if itemType == K.ItemTypes.note {
@@ -189,9 +196,6 @@ class FoldersController: UIViewController {
         }
         
         present(alert, animated: true, completion: nil)
-        
-        saveContext()
-        
     }
     
     @IBAction func addFolderPressed(_ sender: UIBarButtonItem) {
@@ -207,6 +211,15 @@ class FoldersController: UIViewController {
         loadItems(in: currentFolder)
         refreshTableView()
         
+    }
+    
+    // MARK: - Navigation
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destVC = segue.destination as! NotesController
+        let indexPath = tableView.indexPathForSelectedRow!
+        
+        destVC.note = notes[indexPath.row - folders.count]
     }
     
 }
@@ -245,22 +258,49 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
         } else {
             performSegue(withIdentifier: K.Segues.goToNote, sender: self)
         }
-        
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let edit = editName(at: indexPath)
+        let delete = deleteItem(at: indexPath)
+        
+        return UISwipeActionsConfiguration(actions: [delete, edit])
+    }
     
-    // MARK: - Navigation
+    func editName(at indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: "Edit") { (action, view, completion) in
+            
+            completion(true)
+        }
+        action.image = UIImage(systemName: K.Icons.edit)
+        action.backgroundColor = .systemGreen
+        return action
+    }
+    
+    func deleteItem(at indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
+           
+            if indexPath.row < self.folders.count {
+                
+                self.context.delete(self.folders[indexPath.row])
+                self.folders.remove(at: indexPath.row)
+                
+            } else {
+                self.context.delete(self.notes[indexPath.row - self.folders.count])
+                self.notes.remove(at: indexPath.row - self.folders.count)
+            }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destVC = segue.destination as! NotesController
-        let indexPath = tableView.indexPathForSelectedRow!
+            DispatchQueue.main.async {
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+            
+            completion(true)
+        }
         
-        destVC.note = notes[indexPath.row - folders.count]
+        action.image = UIImage(systemName: K.Icons.trash)
+        action.backgroundColor = .systemRed
+        return action
     }
-    
-    
-    
-    
     
 }
 

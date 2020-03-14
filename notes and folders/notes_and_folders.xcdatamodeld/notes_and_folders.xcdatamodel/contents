@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Folder" representedClassName=".Folder" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <relationship name="parentFolder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Folder"/>
     </entity>
@@ -11,7 +12,7 @@
         <relationship name="parentFolder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Folder"/>
     </entity>
     <elements>
-        <element name="Folder" positionX="172.48828125" positionY="-22.9921875" width="128" height="73"/>
+        <element name="Folder" positionX="172.48828125" positionY="-22.9921875" width="128" height="88"/>
         <element name="Note" positionX="-97.984375" positionY="-73.796875" width="128" height="103"/>
     </elements>
 </model>
