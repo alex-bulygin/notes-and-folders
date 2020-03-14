@@ -194,7 +194,8 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destVC = segue.destination as! NotesController
         let indexPath = tableView.indexPathForSelectedRow!
-        destVC.noteTitle = notes[indexPath.row - folders.count].title
+        
+        destVC.note = notes[indexPath.row - folders.count]
     }
     
     

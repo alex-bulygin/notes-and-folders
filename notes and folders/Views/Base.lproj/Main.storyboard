@@ -87,6 +87,7 @@
                     <navigationItem key="navigationItem" id="X3M-zC-1bF"/>
                     <connections>
                         <outlet property="navBar" destination="X3M-zC-1bF" id="TCS-2G-1OW"/>
+                        <outlet property="text" destination="Qb0-7N-TT0" id="jwq-51-t0l"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lYg-5D-b95" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

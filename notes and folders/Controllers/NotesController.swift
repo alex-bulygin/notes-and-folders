@@ -9,20 +9,26 @@
 import UIKit
 
 class NotesController: UIViewController {
-    
-    var noteTitle: String?
+
+    var note: Note?
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     @IBOutlet weak var navBar: UINavigationItem!
-    @IBOutlet weak var text: UITextField!
+    @IBOutlet weak var text: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        text.delegate = self
         
-        navBar.title = noteTitle ?? "Note"
-
-
+        navBar.title = note?.title
+        text.text = note?.text
     }
     
+    
+    
+    func saveContext() {
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+    }
 
     /*
     // MARK: - Navigation
@@ -34,4 +40,14 @@ class NotesController: UIViewController {
     }
     */
 
+}
+
+extension NotesController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        
+        note?.text = text.text
+        note?.modified = Date()
+        saveContext()
+    }
+    
 }
