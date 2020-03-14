@@ -1,6 +1,8 @@
 struct K {
+    static let appName = "Notes And Folders"
     static let itemCell = "ItemCell"
     static let cellNibName = "ItemCell"
+    static let rootFolderName = "Root"
     
     struct Segues {
         static let goToNote = "GoToNote"

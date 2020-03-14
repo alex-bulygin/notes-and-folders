@@ -13,6 +13,7 @@ class FoldersController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navBar: UINavigationItem!
+    @IBOutlet weak var navBackButton: UIBarButtonItem!
     
     var folders = [Folder]()
     var notes = [Note]()
@@ -28,14 +29,24 @@ class FoldersController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        loadItems()
-        //        deleteAll()
-        //        loadItems()
+        navBackButton.isEnabled = false
+        
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        setupRootFolder()
+        
+        loadItems(in: currentFolder)
+
+        
+//
+//        loadItems()
+//        deleteAll()
+//        loadItems()
+        
+        refreshTableView()
         
     }
     
-    func reloadItems() {
-        
+    func refreshTableView() {
         folders.sort {
             $0.name! < $1.name!
         }
@@ -45,23 +56,60 @@ class FoldersController: UIViewController {
         }
         
         DispatchQueue.main.async {
+            
+            if let folder = self.currentFolder {
+                if folder.name == K.rootFolderName {
+                    self.navBar.title = K.appName
+                    self.navBackButton.isEnabled = false
+                } else {
+                    self.navBar.title = folder.name
+                    self.navBackButton.isEnabled = true
+                }
+            }
+            
             self.tableView.reloadData()
         }
     }
     
-    
-    
     //MARK: - Core Data
+    
+    func setupRootFolder() {
+        
+        loadItems()
+        
+        for folder in folders {
+            if folder.name == K.rootFolderName {
+                currentFolder = folder
+                return
+            }
+        }
+        
+        currentFolder = Folder(context: context)
+        currentFolder!.name = K.rootFolderName
+        saveContext()
+        
+    }
     
     func saveContext() {
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
     
-    func loadItems() {
+    func loadItems(in folder: Folder? = nil) {
         
         let folders_request: NSFetchRequest<Folder> = Folder.fetchRequest()
         let notes_request: NSFetchRequest<Note> = Note.fetchRequest()
         
+        let predicate: NSPredicate
+        
+        if let parentFolder = folder {
+             predicate = NSPredicate(format: "parentFolder.name CONTAINS %@", parentFolder.name!)
+            folders_request.predicate = predicate
+            notes_request.predicate = predicate
+        }
+//        else {
+//            predicate = NSPredicate(format: "parentFolder.name MATCHES nil")
+//        }
+                
         do {
             folders = try context.fetch(folders_request)
             notes = try context.fetch(notes_request)
@@ -69,7 +117,6 @@ class FoldersController: UIViewController {
             print(error)
         }
         
-        reloadItems()
     }
     
     func deleteAll() {
@@ -131,7 +178,7 @@ class FoldersController: UIViewController {
                 }
                 
                 self.saveContext()
-                self.reloadItems()
+                self.refreshTableView()
             }
         }
         
@@ -154,6 +201,14 @@ class FoldersController: UIViewController {
     @IBAction func createNotePressed(_ sender: UIButton) {
         addItem(ofType: K.ItemTypes.note)
     }
+    
+    @IBAction func navBackButtonPressed(_ sender: UIBarButtonItem) {
+        currentFolder = currentFolder?.parentFolder
+        loadItems(in: currentFolder)
+        refreshTableView()
+        
+    }
+    
 }
 
 //MARK: - UITableView
@@ -180,10 +235,15 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row >= folders.count {
-           // print(notes[indexPath.row - folders.count].title)
-            performSegue(withIdentifier: K.Segues.goToNote, sender: self)
+        
+        if indexPath.row < folders.count {
             
+            currentFolder = folders[indexPath.row]
+            loadItems(in: currentFolder)
+            refreshTableView()
+            
+        } else {
+            performSegue(withIdentifier: K.Segues.goToNote, sender: self)
         }
         
     }
