@@ -1,8 +1,11 @@
 struct K {
+    
     static let appName = "Notes And Folders"
     static let itemCell = "ItemCell"
     static let cellNibName = "ItemCell"
     static let rootFolderName = "Root"
+    static let defaultNoteName = "New Note"
+    static let maxNoteTitleLength = 20
     
     struct Segues {
         static let goToNote = "GoToNote"
@@ -15,22 +18,18 @@ struct K {
         static let edit = "pencil"
     }
     
-    struct ItemTypes {
-        static let folder = "Folder"
-        static let note = "Note"
-        
+    struct Labels {
         struct Folder {
             static let alertTitle = "Add New Folder"
             static let actionTitle = "Add Folder"
             static let placeholder = "Folder Name"
         }
-    
-        struct Note {
-            static let alertTitle = "Add New Note"
-            static let actionTitle = "Add Note"
-            static let placeholder = "Note Title"
+        
+        struct Edit {
+            static let alertTitle = "Edit Name"
+            static let actionTitle = "Edit"
         }
+
     }
     
-    //static let
 }

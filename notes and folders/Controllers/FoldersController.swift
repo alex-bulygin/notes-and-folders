@@ -144,47 +144,80 @@ class FoldersController: UIViewController {
     }
     
     
-    func addItem(ofType itemType: String) {
-        
-        var alertTitle = String()
-        var actionTitle = String()
-        var placeholder = String()
-        
-        if itemType == K.ItemTypes.folder {
-            alertTitle = K.ItemTypes.Folder.alertTitle
-            actionTitle = K.ItemTypes.Folder.actionTitle
-            placeholder = K.ItemTypes.Folder.placeholder
-        } else if itemType == K.ItemTypes.note {
-            alertTitle = K.ItemTypes.Note.alertTitle
-            actionTitle = K.ItemTypes.Note.actionTitle
-            placeholder = K.ItemTypes.Note.placeholder
-        }
+//    func addItem(ofType itemType: String) {
+//
+//        let alertTitle = K.ItemTypes.Folder.alertTitle
+//        actionTitle = K.ItemTypes.Folder.actionTitle
+//        placeholder = K.ItemTypes.Folder.placeholder
+//
+//        if itemType == K.ItemTypes.folder {
+//            alertTitle = K.ItemTypes.Folder.alertTitle
+//            actionTitle = K.ItemTypes.Folder.actionTitle
+//            placeholder = K.ItemTypes.Folder.placeholder
+//        } else if itemType == K.ItemTypes.note {
+//            alertTitle = K.ItemTypes.Note.alertTitle
+//            actionTitle = K.ItemTypes.Note.actionTitle
+//            placeholder = K.ItemTypes.Note.placeholder
+//        }
+//
+//        var textField = UITextField()
+//
+//        let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
+//        let action = UIAlertAction(title: actionTitle, style: .default) { (action) in
+//            if textField.text != "" {
+//
+//                if itemType == K.ItemTypes.folder {
+//                    let newFolder = Folder(context: self.context)
+//                    newFolder.name = textField.text!
+//                    if let parentFolder = self.currentFolder {
+//                        newFolder.parentFolder = parentFolder
+//                    }
+//                    newFolder.id = UUID().uuidString
+//                    self.folders.append(newFolder)
+//
+//                } else if itemType == K.ItemTypes.note {
+//                    let newNote = Note(context: self.context)
+//                    newNote.title = textField.text!
+//                    if let parentFolder = self.currentFolder {
+//                        newNote.parentFolder = parentFolder
+//                    }
+//                    newNote.modified = Date()
+//                    self.notes.append(newNote)
+//                }
+//
+//                self.saveContext()
+//                self.refreshTableView()
+//            }
+//        }
+//
+//        alert.addAction(action)
+//        alert.addTextField { (field) in
+//            textField = field
+//            textField.placeholder = placeholder
+//        }
+//
+//        present(alert, animated: true, completion: nil)
+//    }
+//
+    
+    //MARK: - @IBActions
+    
+    @IBAction func addFolderPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
         
-        let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
-        let action = UIAlertAction(title: actionTitle, style: .default) { (action) in
+        let alert = UIAlertController(title: K.Labels.Folder.alertTitle, message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: K.Labels.Folder.actionTitle, style: .default) { (action) in
             if textField.text != "" {
                 
-                if itemType == K.ItemTypes.folder {
-                    let newFolder = Folder(context: self.context)
-                    newFolder.name = textField.text!
-                    if let parentFolder = self.currentFolder {
-                        newFolder.parentFolder = parentFolder
-                    }
-                    newFolder.id = UUID().uuidString
-                    self.folders.append(newFolder)
-                    
-                } else if itemType == K.ItemTypes.note {
-                    let newNote = Note(context: self.context)
-                    newNote.title = textField.text!
-                    if let parentFolder = self.currentFolder {
-                        newNote.parentFolder = parentFolder
-                    }
-                    newNote.modified = Date()
-                    self.notes.append(newNote)
+                let newFolder = Folder(context: self.context)
+                newFolder.name = textField.text!
+                if let parentFolder = self.currentFolder {
+                    newFolder.parentFolder = parentFolder
                 }
+                newFolder.id = UUID().uuidString
                 
+                self.folders.append(newFolder)
                 self.saveContext()
                 self.refreshTableView()
             }
@@ -193,21 +226,28 @@ class FoldersController: UIViewController {
         alert.addAction(action)
         alert.addTextField { (field) in
             textField = field
-            textField.placeholder = placeholder
+            textField.placeholder = K.Labels.Folder.placeholder
         }
         
         present(alert, animated: true, completion: nil)
     }
     
-    
-    //MARK: - @IBActions
-    
-    @IBAction func addFolderPressed(_ sender: UIBarButtonItem) {
-        addItem(ofType: K.ItemTypes.folder)
-    }
-    
     @IBAction func createNotePressed(_ sender: UIButton) {
-        addItem(ofType: K.ItemTypes.note)
+        
+        let newNote = Note(context: context)
+        newNote.title = K.defaultNoteName
+        
+        if let parentFolder = currentFolder {
+            newNote.parentFolder = parentFolder
+        }
+        
+        newNote.modified = Date()
+        notes.append(newNote)
+        saveContext()
+        
+        performSegue(withIdentifier: K.Segues.goToNote, sender: self)
+        
+    
     }
     
     @IBAction func navBackButtonPressed(_ sender: UIBarButtonItem) {
@@ -222,11 +262,12 @@ class FoldersController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destVC = segue.destination as! NotesController
-        let indexPath = tableView.indexPathForSelectedRow!
-        
-        destVC.note = notes[indexPath.row - folders.count]
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destVC.note = notes[indexPath.row - folders.count]
+        } else {
+            destVC.note = notes.last
+        }
     }
-    
 }
 
 
@@ -272,16 +313,22 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
         let edit = editName(at: indexPath)
         let delete = deleteItem(at: indexPath)
         
-        return UISwipeActionsConfiguration(actions: [delete, edit])
+        if indexPath.row < folders.count {
+            return UISwipeActionsConfiguration(actions: [delete, edit])
+        } else {
+            return UISwipeActionsConfiguration(actions: [delete])
+        }
+
     }
     
     func editName(at indexPath: IndexPath) -> UIContextualAction {
+        
         let action = UIContextualAction(style: .normal, title: "Edit") { (action, view, completion) in
             
             var textField = UITextField()
             
-            let alert = UIAlertController(title: "Edit Name", message: "", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Edit", style: .default) { (action) in
+            let alert = UIAlertController(title: K.Labels.Edit.alertTitle, message: "", preferredStyle: .alert)
+            let action = UIAlertAction(title: K.Labels.Edit.actionTitle, style: .default) { (action) in
                 if textField.text != "" {
                     
                     let folder = self.folders[indexPath.row]
@@ -303,6 +350,7 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
 
             completion(true)
         }
+        
         action.image = UIImage(systemName: K.Icons.edit)
         action.backgroundColor = .systemGreen
         return action
