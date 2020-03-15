@@ -9,11 +9,12 @@
 import UIKit
 import CoreData
 
-class FoldersController: UIViewController {
+class FoldersController: UIViewController, Storyboarded {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navBar: UINavigationItem!
-    @IBOutlet weak var navBackButton: UIBarButtonItem!
+    
+    var coordinator: MainCoordinator?
     
     var folders = [Folder]()
     var notes = [Note]()
@@ -21,19 +22,17 @@ class FoldersController: UIViewController {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.register(UINib(nibName: K.cellNibName, bundle: nil), forCellReuseIdentifier: K.itemCell)
-        
         tableView.dataSource = self
         tableView.delegate = self
-        
-        navBackButton.isEnabled = false
-        
-        setupRootFolder()
-        loadItems(in: currentFolder)
-        refreshTableView()
+
+        if currentFolder == nil {
+            setupRootFolder()
+        }
         
         //        loadItems()
         //        deleteAll()
@@ -42,44 +41,37 @@ class FoldersController: UIViewController {
         
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         loadItems(in: currentFolder)
         refreshTableView()
-        
     }
+    
     
     func sortFoldersAndNotes() {
         folders.sort {
             $0.name! < $1.name!
         }
-        
         notes.sort {
             $0.modified! > $1.modified!
         }
-        
     }
     
+    
     func refreshTableView() {
-        
         sortFoldersAndNotes()
         
         DispatchQueue.main.async {
-            
             if let folder = self.currentFolder {
-                if folder.name == K.rootFolderName {
-                    self.navBar.title = K.appName
-                    self.navBackButton.isEnabled = false
-                } else {
-                    self.navBar.title = folder.name
-                    self.navBackButton.isEnabled = true
-                }
+                self.navBar.title = folder.name == K.rootFolderName ? K.appName : folder.name
             }
             
             self.tableView.reloadData()
         }
     }
+    
     
     func setupRootFolder() {
         
@@ -96,8 +88,8 @@ class FoldersController: UIViewController {
         currentFolder!.name = K.rootFolderName
         currentFolder!.id = UUID().uuidString
         saveContext()
-        
     }
+    
     
     //MARK: - Core Data
     
@@ -142,7 +134,7 @@ class FoldersController: UIViewController {
         
         saveContext()
     }
-
+    
     
     //MARK: - @IBActions
     
@@ -189,28 +181,15 @@ class FoldersController: UIViewController {
         notes.append(newNote)
         saveContext()
         
-        performSegue(withIdentifier: K.Segues.goToNote, sender: self)
+        coordinator?.openNoteEditor(with: newNote)
         
-    
     }
+    
     
     @IBAction func navBackButtonPressed(_ sender: UIBarButtonItem) {
         currentFolder = currentFolder?.parentFolder
         loadItems(in: currentFolder)
         refreshTableView()
-        
-    }
-    
-    
-    // MARK: - Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destVC = segue.destination as! NotesController
-        if let indexPath = tableView.indexPathForSelectedRow {
-            destVC.note = notes[indexPath.row - folders.count]
-        } else {
-            destVC.note = notes.last
-        }
     }
 }
 
@@ -241,15 +220,14 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.row < folders.count {
-            
-            currentFolder = folders[indexPath.row]
-            loadItems(in: currentFolder)
-            refreshTableView()
-            
+            coordinator?.openFolder(with: folders[indexPath.row])
         } else {
-            performSegue(withIdentifier: K.Segues.goToNote, sender: self)
+            if let indexPath = tableView.indexPathForSelectedRow {
+                coordinator?.openNoteEditor(with: notes[indexPath.row - folders.count])
+            }
         }
     }
+    
     
     //MARK: - Swipe actions
     
@@ -262,8 +240,9 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
         } else {
             return UISwipeActionsConfiguration(actions: [delete])
         }
-
+        
     }
+    
     
     func editName(at indexPath: IndexPath) -> UIContextualAction {
         
@@ -278,7 +257,7 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
                     let folder = self.folders[indexPath.row]
                     folder.name = textField.text!
                     self.folders[indexPath.row] = folder
-
+                    
                     self.saveContext()
                     self.refreshTableView()
                 }
@@ -291,7 +270,7 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
             }
             
             self.present(alert, animated: true, completion: nil)
-
+            
             completion(true)
         }
         
@@ -299,6 +278,7 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
         action.backgroundColor = .systemGreen
         return action
     }
+    
     
     func deleteItem(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in

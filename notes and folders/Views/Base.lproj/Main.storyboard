@@ -10,7 +10,7 @@
         <!--Folders Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="FoldersController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FoldersController" id="BYZ-38-t0r" customClass="FoldersController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -43,11 +43,6 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="SQi-lv-8RI">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="XRB-32-w71">
-                            <connections>
-                                <action selector="navBackButtonPressed:" destination="BYZ-38-t0r" id="gA3-IB-eWB"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Add Folder" id="UtU-pU-hhf">
                             <connections>
                                 <action selector="addFolderPressed:" destination="BYZ-38-t0r" id="Dm3-q3-6Rx"/>
@@ -55,10 +50,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="navBackButton" destination="XRB-32-w71" id="w06-aT-wrh"/>
                         <outlet property="navBar" destination="SQi-lv-8RI" id="PML-Ny-Zct"/>
                         <outlet property="tableView" destination="Dxm-o6-Ja6" id="IZf-bR-paw"/>
-                        <segue destination="tOA-RE-Gdg" kind="show" identifier="GoToNote" id="Lru-De-2Mf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -68,13 +61,13 @@
         <!--Notes Controller-->
         <scene sceneID="xhz-6u-XVj">
             <objects>
-                <viewController id="tOA-RE-Gdg" customClass="NotesController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NotesController" id="tOA-RE-Gdg" customClass="NotesController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kl-Yf-5Ti">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Qb0-7N-TT0">
-                                <rect key="frame" x="25" y="113" width="364" height="724"/>
+                                <rect key="frame" x="25" y="69" width="364" height="768"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>

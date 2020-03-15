@@ -9,13 +9,16 @@
 
 import UIKit
 
-class NotesController: UIViewController {
-
-    var note: Note?
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
+class NotesController: UIViewController, Storyboarded{
+    
     @IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet weak var text: UITextView!
+    
+    var coordinator: MainCoordinator?
+    
+    var note: Note?
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,9 +29,11 @@ class NotesController: UIViewController {
         
     }
     
+    
     func saveContext() {
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
+    
     
     func generateTitle(from text: String) -> String {
             
@@ -50,6 +55,7 @@ class NotesController: UIViewController {
     }
 
 }
+
 
 //MARK: - UITextViewDelegate
 

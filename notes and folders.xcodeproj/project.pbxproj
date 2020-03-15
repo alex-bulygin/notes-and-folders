@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0412AEDD241E85CB0068CCF5 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412AEDC241E85CB0068CCF5 /* Coordinator.swift */; };
+		0412AEDF241E86810068CCF5 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412AEDE241E86810068CCF5 /* Storyboarded.swift */; };
+		0412AEE1241E89170068CCF5 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412AEE0241E89170068CCF5 /* MainCoordinator.swift */; };
 		041DDD0E241D0C4D00096E9D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041DDD0D241D0C4D00096E9D /* Constants.swift */; };
 		04262108241D2A680024C58A /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04262106241D2A680024C58A /* ItemCell.swift */; };
 		04262109241D2A680024C58A /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04262107241D2A680024C58A /* ItemCell.xib */; };
@@ -21,6 +24,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0412AEDC241E85CB0068CCF5 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		0412AEDE241E86810068CCF5 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
+		0412AEE0241E89170068CCF5 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		041DDD0D241D0C4D00096E9D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		04262106241D2A680024C58A /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		04262107241D2A680024C58A /* ItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
@@ -47,11 +53,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0412AEDB241E85650068CCF5 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				0412AEDC241E85CB0068CCF5 /* Coordinator.swift */,
+				0412AEDE241E86810068CCF5 /* Storyboarded.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		041DDD0F241D0CA700096E9D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				042A4FFA241CFDF200C5C509 /* FoldersController.swift */,
 				0426210A241D325B0024C58A /* NotesController.swift */,
+				0412AEE0241E89170068CCF5 /* MainCoordinator.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -87,13 +103,14 @@
 			children = (
 				042A4FF6241CFDF200C5C509 /* AppDelegate.swift */,
 				042A4FF8241CFDF200C5C509 /* SceneDelegate.swift */,
+				041DDD0D241D0C4D00096E9D /* Constants.swift */,
 				041DDD0F241D0CA700096E9D /* Controllers */,
 				041DDD10241D0CC400096E9D /* Views */,
+				0412AEDB241E85650068CCF5 /* Protocols */,
 				042A5002241CFDF300C5C509 /* Assets.xcassets */,
 				042A5004241CFDF300C5C509 /* LaunchScreen.storyboard */,
 				042A5007241CFDF300C5C509 /* Info.plist */,
 				042A4FFF241CFDF200C5C509 /* notes_and_folders.xcdatamodeld */,
-				041DDD0D241D0C4D00096E9D /* Constants.swift */,
 			);
 			path = "notes and folders";
 			sourceTree = "<group>";
@@ -170,10 +187,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0412AEDD241E85CB0068CCF5 /* Coordinator.swift in Sources */,
 				041DDD0E241D0C4D00096E9D /* Constants.swift in Sources */,
 				042A4FFB241CFDF200C5C509 /* FoldersController.swift in Sources */,
+				0412AEE1241E89170068CCF5 /* MainCoordinator.swift in Sources */,
 				04262108241D2A680024C58A /* ItemCell.swift in Sources */,
 				042A4FF7241CFDF200C5C509 /* AppDelegate.swift in Sources */,
+				0412AEDF241E86810068CCF5 /* Storyboarded.swift in Sources */,
 				042A4FF9241CFDF200C5C509 /* SceneDelegate.swift in Sources */,
 				042A5001241CFDF200C5C509 /* notes_and_folders.xcdatamodeld in Sources */,
 				0426210B241D325B0024C58A /* NotesController.swift in Sources */,
