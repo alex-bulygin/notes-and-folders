@@ -13,6 +13,7 @@ class FoldersViewController: UIViewController, Storyboarded {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navBar: UINavigationItem!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var coordinator: MainCoordinator?
     
@@ -29,24 +30,29 @@ class FoldersViewController: UIViewController, Storyboarded {
         tableView.register(UINib(nibName: K.cellNibName, bundle: nil), forCellReuseIdentifier: K.itemCell)
         tableView.dataSource = self
         tableView.delegate = self
-
+        
         if currentFolder == nil {
             setupRootFolder()
         }
+
+        hideKeyboardWhenTappedAround()
         
-        //        loadItems()
-        //        deleteAll()
-        //        loadItems()
-        //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+//        loadItems()
+//        deleteAll()
+//        loadItems()
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        loadItems(in: currentFolder)
-        refreshTableView()
+        if searchBar.text != "" {
+            search(for: searchBar.text!)
+        } else {
+            loadItems(in: currentFolder)
+            refreshTableView()
+        }
     }
     
     
@@ -119,6 +125,16 @@ class FoldersViewController: UIViewController, Storyboarded {
         }
     }
     
+    func loadItems(with request: NSFetchRequest<Note>) {
+        
+        do {
+            folders = []
+            notes = try context.fetch(request)
+        } catch {
+            print(error)
+        }
+    }
+    
     
     func deleteAll() {
         
@@ -167,6 +183,7 @@ class FoldersViewController: UIViewController, Storyboarded {
         
         present(alert, animated: true, completion: nil)
     }
+    
     
     @IBAction func createNotePressed(_ sender: UIButton) {
         
@@ -305,5 +322,62 @@ extension FoldersViewController: UITableViewDataSource, UITableViewDelegate {
         return action
     }
     
+}
+
+
+//MARK: - UISearchBarDelegate
+
+extension FoldersViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if searchBar.text != "" {
+            search(for: searchBar.text!)
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            loadItems(in: currentFolder)
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            refreshTableView()
+            
+        } else {
+            search(for: searchText)
+        }
+    }
+    
+    func search(for text: String) {
+        
+        let request: NSFetchRequest<Note> = Note.fetchRequest()
+        
+        let predicate  = NSPredicate(format: "text CONTAINS[cd] %@", text)
+        
+        request.predicate = predicate
+        request.sortDescriptors = [NSSortDescriptor(key: "modified", ascending: false)]
+        
+        loadItems(with: request)
+        
+        refreshTableView()
+        
+    }
+    
+    
+}
+
+//MARK: - Hide Keyboard
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 

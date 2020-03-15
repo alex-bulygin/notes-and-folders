@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Dxm-o6-Ja6">
-                                <rect key="frame" x="0.0" y="88" width="414" height="724"/>
+                                <rect key="frame" x="0.0" y="132" width="414" height="680"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nkp-P4-C3C">
@@ -30,15 +30,28 @@
                                     <action selector="createNotePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="H4o-3y-Apb"/>
                                 </connections>
                             </button>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ZfT-Tb-6jp">
+                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="r0g-cu-nx3"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="3aW-d1-edB"/>
+                                </connections>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="ZfT-Tb-6jp" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="2y5-fY-KqL"/>
                             <constraint firstItem="Dxm-o6-Ja6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="3XA-6c-zFM"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Nkp-P4-C3C" secondAttribute="bottom" id="68g-r5-1D2"/>
                             <constraint firstItem="Dxm-o6-Ja6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="6IM-sD-TtB"/>
+                            <constraint firstItem="ZfT-Tb-6jp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="8PZ-pA-Rgh"/>
+                            <constraint firstItem="ZfT-Tb-6jp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="JiC-3g-S2W"/>
+                            <constraint firstItem="Dxm-o6-Ja6" firstAttribute="top" secondItem="ZfT-Tb-6jp" secondAttribute="bottom" symbolic="YES" id="MdL-bp-sfH"/>
                             <constraint firstItem="Nkp-P4-C3C" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="REf-5E-33c"/>
                             <constraint firstItem="Nkp-P4-C3C" firstAttribute="top" secondItem="Dxm-o6-Ja6" secondAttribute="bottom" id="gLn-C2-TlJ"/>
-                            <constraint firstItem="Dxm-o6-Ja6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="jct-sW-V55"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -51,6 +64,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="navBar" destination="SQi-lv-8RI" id="PML-Ny-Zct"/>
+                        <outlet property="searchBar" destination="ZfT-Tb-6jp" id="sAq-T0-tPV"/>
                         <outlet property="tableView" destination="Dxm-o6-Ja6" id="IZf-bR-paw"/>
                     </connections>
                 </viewController>
