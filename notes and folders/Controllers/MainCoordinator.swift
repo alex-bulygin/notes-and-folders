@@ -18,20 +18,20 @@ class MainCoordinator: NSObject, Coordinator {
     }
     
     func start() {
-        let vc = FoldersController.instantiate()
+        let vc = FoldersViewController.instantiate()
         vc.coordinator = self
         navigationController.pushViewController(vc, animated: false)
     }
     
     func openFolder(with currentFolder: Folder) {
-        let vc = FoldersController.instantiate()
+        let vc = FoldersViewController.instantiate()
         vc.coordinator = self
         vc.currentFolder = currentFolder
         navigationController.pushViewController(vc, animated: true)
     }
     
     func openNoteEditor(with note: Note) {
-        let vc = NotesController.instantiate()
+        let vc = NotesViewController.instantiate()
         vc.coordinator = self
         vc.note = note
         navigationController.pushViewController(vc, animated: true)

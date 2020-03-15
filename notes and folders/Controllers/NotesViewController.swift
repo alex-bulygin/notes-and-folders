@@ -9,7 +9,7 @@
 
 import UIKit
 
-class NotesController: UIViewController, Storyboarded{
+class NotesViewController: UIViewController, Storyboarded{
     
     @IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet weak var text: UITextView!
@@ -59,7 +59,7 @@ class NotesController: UIViewController, Storyboarded{
 
 //MARK: - UITextViewDelegate
 
-extension NotesController: UITextViewDelegate {
+extension NotesViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         
         note?.text = text.text

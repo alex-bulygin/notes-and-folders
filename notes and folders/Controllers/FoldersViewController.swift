@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class FoldersController: UIViewController, Storyboarded {
+class FoldersViewController: UIViewController, Storyboarded {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navBar: UINavigationItem!
@@ -196,7 +196,7 @@ class FoldersController: UIViewController, Storyboarded {
 
 //MARK: - UITableView
 
-extension FoldersController: UITableViewDataSource, UITableViewDelegate {
+extension FoldersViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return folders.count + notes.count

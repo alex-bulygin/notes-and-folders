@@ -7,10 +7,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Folders Controller-->
+        <!--Folders View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="FoldersController" id="BYZ-38-t0r" customClass="FoldersController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FoldersViewController" id="BYZ-38-t0r" customClass="FoldersViewController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -58,10 +58,10 @@
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="121.875"/>
         </scene>
-        <!--Notes Controller-->
+        <!--Notes View Controller-->
         <scene sceneID="xhz-6u-XVj">
             <objects>
-                <viewController storyboardIdentifier="NotesController" id="tOA-RE-Gdg" customClass="NotesController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NotesViewController" id="tOA-RE-Gdg" customClass="NotesViewController" customModule="notes_and_folders" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kl-Yf-5Ti">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
