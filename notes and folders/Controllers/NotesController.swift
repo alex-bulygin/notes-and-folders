@@ -24,8 +24,6 @@ class NotesController: UIViewController {
         navBar.title = note?.title
         text.text = note?.text
         
-//        print(text.text)
-//        print(note?.text)
     }
     
     func saveContext() {

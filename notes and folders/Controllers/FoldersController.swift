@@ -142,63 +142,7 @@ class FoldersController: UIViewController {
         
         saveContext()
     }
-    
-    
-//    func addItem(ofType itemType: String) {
-//
-//        let alertTitle = K.ItemTypes.Folder.alertTitle
-//        actionTitle = K.ItemTypes.Folder.actionTitle
-//        placeholder = K.ItemTypes.Folder.placeholder
-//
-//        if itemType == K.ItemTypes.folder {
-//            alertTitle = K.ItemTypes.Folder.alertTitle
-//            actionTitle = K.ItemTypes.Folder.actionTitle
-//            placeholder = K.ItemTypes.Folder.placeholder
-//        } else if itemType == K.ItemTypes.note {
-//            alertTitle = K.ItemTypes.Note.alertTitle
-//            actionTitle = K.ItemTypes.Note.actionTitle
-//            placeholder = K.ItemTypes.Note.placeholder
-//        }
-//
-//        var textField = UITextField()
-//
-//        let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
-//        let action = UIAlertAction(title: actionTitle, style: .default) { (action) in
-//            if textField.text != "" {
-//
-//                if itemType == K.ItemTypes.folder {
-//                    let newFolder = Folder(context: self.context)
-//                    newFolder.name = textField.text!
-//                    if let parentFolder = self.currentFolder {
-//                        newFolder.parentFolder = parentFolder
-//                    }
-//                    newFolder.id = UUID().uuidString
-//                    self.folders.append(newFolder)
-//
-//                } else if itemType == K.ItemTypes.note {
-//                    let newNote = Note(context: self.context)
-//                    newNote.title = textField.text!
-//                    if let parentFolder = self.currentFolder {
-//                        newNote.parentFolder = parentFolder
-//                    }
-//                    newNote.modified = Date()
-//                    self.notes.append(newNote)
-//                }
-//
-//                self.saveContext()
-//                self.refreshTableView()
-//            }
-//        }
-//
-//        alert.addAction(action)
-//        alert.addTextField { (field) in
-//            textField = field
-//            textField.placeholder = placeholder
-//        }
-//
-//        present(alert, animated: true, completion: nil)
-//    }
-//
+
     
     //MARK: - @IBActions
     
