@@ -30,15 +30,15 @@ class FoldersController: UIViewController {
         tableView.delegate = self
         
         navBackButton.isEnabled = false
-
+        
         setupRootFolder()
         loadItems(in: currentFolder)
         refreshTableView()
-
-//        loadItems()
-//        deleteAll()
-//        loadItems()
-//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
+        //        loadItems()
+        //        deleteAll()
+        //        loadItems()
+        //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
     }
     
@@ -47,7 +47,7 @@ class FoldersController: UIViewController {
         
         loadItems(in: currentFolder)
         refreshTableView()
-
+        
     }
     
     func sortFoldersAndNotes() {
@@ -64,7 +64,7 @@ class FoldersController: UIViewController {
     func refreshTableView() {
         
         sortFoldersAndNotes()
-
+        
         DispatchQueue.main.async {
             
             if let folder = self.currentFolder {
@@ -105,6 +105,7 @@ class FoldersController: UIViewController {
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
     
+    
     func loadItems(in folder: Folder? = nil) {
         
         let folders_request: NSFetchRequest<Folder> = Folder.fetchRequest()
@@ -117,15 +118,15 @@ class FoldersController: UIViewController {
             folders_request.predicate = predicate
             notes_request.predicate = predicate
         }
-                
+        
         do {
             folders = try context.fetch(folders_request)
             notes = try context.fetch(notes_request)
         } catch {
             print(error)
         }
-        
     }
+    
     
     func deleteAll() {
         
@@ -141,6 +142,7 @@ class FoldersController: UIViewController {
         
         saveContext()
     }
+    
     
     func addItem(ofType itemType: String) {
         
@@ -181,7 +183,6 @@ class FoldersController: UIViewController {
                     }
                     newNote.modified = Date()
                     self.notes.append(newNote)
-                    
                 }
                 
                 self.saveContext()
@@ -198,6 +199,9 @@ class FoldersController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    
+    //MARK: - @IBActions
+    
     @IBAction func addFolderPressed(_ sender: UIBarButtonItem) {
         addItem(ofType: K.ItemTypes.folder)
     }
@@ -213,8 +217,9 @@ class FoldersController: UIViewController {
         
     }
     
+    
     // MARK: - Navigation
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destVC = segue.destination as! NotesController
         let indexPath = tableView.indexPathForSelectedRow!
@@ -223,6 +228,7 @@ class FoldersController: UIViewController {
     }
     
 }
+
 
 //MARK: - UITableView
 
@@ -260,6 +266,8 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    //MARK: - Swipe actions
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let edit = editName(at: indexPath)
         let delete = deleteItem(at: indexPath)
@@ -270,6 +278,29 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
     func editName(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Edit") { (action, view, completion) in
             
+            var textField = UITextField()
+            
+            let alert = UIAlertController(title: "Edit Name", message: "", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Edit", style: .default) { (action) in
+                if textField.text != "" {
+                    
+                    let folder = self.folders[indexPath.row]
+                    folder.name = textField.text!
+                    self.folders[indexPath.row] = folder
+
+                    self.saveContext()
+                    self.refreshTableView()
+                }
+            }
+            
+            alert.addAction(action)
+            alert.addTextField { (field) in
+                textField = field
+                textField.text = self.folders[indexPath.row].name
+            }
+            
+            self.present(alert, animated: true, completion: nil)
+
             completion(true)
         }
         action.image = UIImage(systemName: K.Icons.edit)
@@ -279,7 +310,7 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
     
     func deleteItem(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
-           
+            
             if indexPath.row < self.folders.count {
                 
                 self.context.delete(self.folders[indexPath.row])
@@ -289,7 +320,7 @@ extension FoldersController: UITableViewDataSource, UITableViewDelegate {
                 self.context.delete(self.notes[indexPath.row - self.folders.count])
                 self.notes.remove(at: indexPath.row - self.folders.count)
             }
-
+            
             DispatchQueue.main.async {
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
             }

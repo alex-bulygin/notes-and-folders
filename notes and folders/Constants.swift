@@ -31,4 +31,6 @@ struct K {
             static let placeholder = "Note Title"
         }
     }
+    
+    //static let
 }
