@@ -37,7 +37,7 @@ class NotesViewController: UIViewController, Storyboarded{
     
     func generateTitle(from text: String) -> String {
             
-        var title = text
+        var title = text.trimmingCharacters(in: .whitespaces)
         
         if let index = text.firstIndex(of: "\n") {
             title = String(text[..<index])
