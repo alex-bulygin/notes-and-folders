@@ -35,35 +35,23 @@ class FoldersViewController: UIViewController, Storyboarded {
         if currentFolder == nil {
             setupRootFolder()
         }
-        
-        let items = findAllItems(in: currentFolder!)
-        
-        for item in items {
-            if let folder = item as? Folder {
-                print(folder.name)
-            } else if let note = item as? Note {
-                print(note.title)
-            }
-        }
-
- 
-        
-//        loadItems()
+         
 //        deleteAll()
-//        loadItems()
 //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        
     }
+    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         if searchBar.text != "" {
-            search(for: searchBar.text!, in: currentFolder)
+            searchNotes(with: searchBar.text!, in: currentFolder)
         } else {
             loadItems(in: currentFolder)
             refreshTableView()
         }
     }
+    
     
     func setupRootFolder() {
         
@@ -134,8 +122,8 @@ class FoldersViewController: UIViewController, Storyboarded {
         }
     }
     
-    func loadItems(with request: NSFetchRequest<Note>) {
-        
+    
+    func loadNotes(with request: NSFetchRequest<Note>) {        
         do {
             folders = []
             notes = try context.fetch(request)
@@ -146,6 +134,8 @@ class FoldersViewController: UIViewController, Storyboarded {
     
     
     func deleteAll() {
+        
+        loadItems()
         
         for folder in folders {
             context.delete(folder)
@@ -208,14 +198,6 @@ class FoldersViewController: UIViewController, Storyboarded {
         saveContext()
         
         coordinator?.openNoteEditor(with: newNote)
-        
-    }
-    
-    
-    @IBAction func navBackButtonPressed(_ sender: UIBarButtonItem) {
-        currentFolder = currentFolder?.parentFolder
-        loadItems(in: currentFolder)
-        refreshTableView()
     }
 }
 
@@ -232,7 +214,6 @@ extension FoldersViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: K.itemCell, for: indexPath) as! ItemCell
         
         if indexPath.row < folders.count {
-            
             cell.label.text = folders[indexPath.row].name
             cell.icon.image = UIImage(systemName: K.Icons.folder)
         } else {
@@ -248,9 +229,7 @@ extension FoldersViewController: UITableViewDataSource, UITableViewDelegate {
         if indexPath.row < folders.count {
             coordinator?.openFolder(with: folders[indexPath.row])
         } else {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                coordinator?.openNoteEditor(with: notes[indexPath.row - folders.count])
-            }
+            coordinator?.openNoteEditor(with: notes[indexPath.row - folders.count])
         }
     }
     
@@ -338,7 +317,6 @@ extension FoldersViewController: UITableViewDataSource, UITableViewDelegate {
         action.backgroundColor = .systemRed
         return action
     }
-    
 }
 
 
@@ -348,9 +326,10 @@ extension FoldersViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if searchBar.text != "" {
-            search(for: searchBar.text!, in: currentFolder)
+            searchNotes(with: searchBar.text!, in: currentFolder)
         }
     }
+    
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText == "" {
@@ -362,22 +341,29 @@ extension FoldersViewController: UISearchBarDelegate {
             refreshTableView()
             
         } else {
-            search(for: searchText, in: currentFolder)
+            searchNotes(with: searchText, in: currentFolder)
         }
     }
     
-    func search(for text: String, in folder: Folder?) {
+    
+    func searchNotes(with text: String, in folder: Folder?) {
         
         guard folder != nil else { return }
+        let allItemsInFolder = findAllItems(in: folder!)
         
         let request: NSFetchRequest<Note> = Note.fetchRequest()
-        
         let predicate  = NSPredicate(format: "text CONTAINS[cd] %@", text)
         
         request.predicate = predicate
         request.sortDescriptors = [NSSortDescriptor(key: "modified", ascending: false)]
         
-        loadItems(with: request)
+        loadNotes(with: request)
+        
+        for (index, note) in notes.enumerated() {
+            if allItemsInFolder.firstIndex(of: note as NSManagedObject) == nil {
+                notes.remove(at: index)
+            }
+        }
         
         refreshTableView()
         
@@ -403,6 +389,7 @@ extension FoldersViewController: UISearchBarDelegate {
         return items
     }
 }
+
 
 //MARK: - Hide Keyboard
 

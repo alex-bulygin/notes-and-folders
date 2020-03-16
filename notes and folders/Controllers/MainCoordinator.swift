@@ -17,11 +17,13 @@ class MainCoordinator: NSObject, Coordinator {
         self.navigationController = navigationController
     }
     
+    
     func start() {
         let vc = FoldersViewController.instantiate()
         vc.coordinator = self
         navigationController.pushViewController(vc, animated: false)
     }
+    
     
     func openFolder(with currentFolder: Folder) {
         let vc = FoldersViewController.instantiate()
@@ -29,6 +31,7 @@ class MainCoordinator: NSObject, Coordinator {
         vc.currentFolder = currentFolder
         navigationController.pushViewController(vc, animated: true)
     }
+    
     
     func openNoteEditor(with note: Note) {
         let vc = NotesViewController.instantiate()
