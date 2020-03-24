@@ -35,7 +35,7 @@ class NotesViewController: UIViewController, Storyboarded{
     }
     
     
-    func generateTitle(from text: String) -> String {
+    func generateTitleForNote(from text: String) -> String {
             
         var title = text.trimmingCharacters(in: .whitespaces)
         
@@ -62,7 +62,7 @@ extension NotesViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         
         note?.text = text.text
-        note?.title = generateTitle(from: text.text)
+        note?.title = generateTitleForNote(from: text.text)
         note?.modified = Date()
         saveContext()
     }
