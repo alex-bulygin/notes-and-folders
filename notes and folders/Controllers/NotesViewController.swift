@@ -29,6 +29,44 @@ class NotesViewController: UIViewController, Storyboarded{
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(NotesViewController.handleKeyboardDidShow(notification:)),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(NotesViewController.handleKeybolardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+    
+    @objc func handleKeyboardDidShow(notification: NSNotification) {
+        guard let keyboardRect = notification
+            .userInfo![UIResponder.keyboardFrameEndUserInfoKey]
+            as? NSValue else { return }
+
+        let frameKeyboard = keyboardRect.cgRectValue
+
+        text.contentInset = UIEdgeInsets(
+            top: 0.0,
+            left: 0.0,
+            bottom: frameKeyboard.size.height,
+            right: 0.0
+        )
+
+        view.layoutIfNeeded()
+    }
+
+    @objc func handleKeybolardWillHide() {
+        text.contentInset = .zero
+    }
+    
     
     func saveContext() {
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
