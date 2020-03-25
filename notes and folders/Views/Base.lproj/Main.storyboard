@@ -63,6 +63,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addFolderButton" destination="UtU-pU-hhf" id="Vh7-pQ-F53"/>
                         <outlet property="navBar" destination="SQi-lv-8RI" id="PML-Ny-Zct"/>
                         <outlet property="searchBar" destination="ZfT-Tb-6jp" id="sAq-T0-tPV"/>
                         <outlet property="tableView" destination="Dxm-o6-Ja6" id="IZf-bR-paw"/>

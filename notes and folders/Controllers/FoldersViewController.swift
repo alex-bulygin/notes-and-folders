@@ -14,6 +14,7 @@ class FoldersViewController: UIViewController, Storyboarded {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var addFolderButton: UIBarButtonItem!
     
     var coordinator: MainCoordinator?
     
@@ -46,8 +47,10 @@ class FoldersViewController: UIViewController, Storyboarded {
         
         // Perform search if the search bar isn't empty, otherwise load folder's contents
         if searchBar.text != "" {
+            addFolderButton.isEnabled = false
             searchNotes(with: searchBar.text!, in: currentFolder)
         } else {
+            addFolderButton.isEnabled = true
             loadItems(in: currentFolder)
             refreshTableView()
         }
@@ -356,6 +359,7 @@ extension FoldersViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // Perform a search if the search bar isn't empty
         if searchBar.text != "" {
+            addFolderButton.isEnabled = false
             searchNotes(with: searchBar.text!, in: currentFolder)
         }
     }
@@ -364,6 +368,7 @@ extension FoldersViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         // If the search bar is empty load current folder's contents, otherwise perform a search
         if searchText == "" {
+            addFolderButton.isEnabled = true
             loadItems(in: currentFolder)
             
             DispatchQueue.main.async {
@@ -372,6 +377,7 @@ extension FoldersViewController: UISearchBarDelegate {
             refreshTableView()
             
         } else {
+            addFolderButton.isEnabled = false
             searchNotes(with: searchText, in: currentFolder)
         }
     }
