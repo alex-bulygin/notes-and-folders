@@ -21,6 +21,7 @@
 		042A5001241CFDF200C5C509 /* notes_and_folders.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 042A4FFF241CFDF200C5C509 /* notes_and_folders.xcdatamodeld */; };
 		042A5003241CFDF300C5C509 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 042A5002241CFDF300C5C509 /* Assets.xcassets */; };
 		042A5006241CFDF300C5C509 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 042A5004241CFDF300C5C509 /* LaunchScreen.storyboard */; };
+		047550C1242BFEC30025E522 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 047550C0242BFEC30025E522 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		042A5002241CFDF300C5C509 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		042A5005241CFDF300C5C509 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		042A5007241CFDF300C5C509 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		047550C0242BFEC30025E522 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 		042A4FEA241CFDF200C5C509 = {
 			isa = PBXGroup;
 			children = (
+				047550C0242BFEC30025E522 /* README.md */,
 				042A4FF5241CFDF200C5C509 /* notes and folders */,
 				042A4FF4241CFDF200C5C509 /* Products */,
 			);
@@ -175,6 +178,7 @@
 			files = (
 				04262109241D2A680024C58A /* ItemCell.xib in Resources */,
 				042A5006241CFDF300C5C509 /* LaunchScreen.storyboard in Resources */,
+				047550C1242BFEC30025E522 /* README.md in Resources */,
 				042A5003241CFDF300C5C509 /* Assets.xcassets in Resources */,
 				042A4FFE241CFDF200C5C509 /* Main.storyboard in Resources */,
 			);
